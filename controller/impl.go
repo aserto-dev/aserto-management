@@ -12,10 +12,17 @@ import (
 	"github.com/aserto-dev/runtime"
 	"github.com/open-policy-agent/opa/plugins/discovery"
 	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
 )
 
-func startController(ctx context.Context, factory *Factory, tenantID, policyID, host string, r *runtime.Runtime) (func(), error) {
-	options, err := client.ConfigToConnectionOptions(&factory.cfg.Server, factory.dop)
+func (f *Factory) startController(ctx context.Context, tenantID, policyID, host string, r *runtime.Runtime) (func(), error) {
+	logger := f.logger.With().Fields(map[string]interface{}{
+		"tenant-id": tenantID,
+		"policy-id": policyID,
+		"host":      host,
+	}).Logger()
+
+	options, err := client.ConfigToConnectionOptions(&f.cfg.Server, f.dop)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup grpc dial options for the remote service")
 	}
@@ -29,12 +36,12 @@ func startController(ctx context.Context, factory *Factory, tenantID, policyID, 
 
 	go func() {
 		for {
-			err = runCommandLoop(ctx, factory, policyID, host, r, stop, options)
+			err = f.runCommandLoop(ctx, &logger, policyID, host, r, stop, options)
 			if err == nil || err == io.EOF {
 				return
 			}
 
-			factory.logger.Info().Err(err).Msg("command loop exited with error, restarting")
+			logger.Info().Err(err).Msg("command loop exited with error, restarting")
 			time.Sleep(5 * time.Second)
 		}
 	}()
@@ -42,7 +49,7 @@ func startController(ctx context.Context, factory *Factory, tenantID, policyID, 
 	return cleanup, nil
 }
 
-func runCommandLoop(ctx context.Context, factory *Factory, policyID, host string, r *runtime.Runtime, stop <-chan bool, opts []gosdk.ConnectionOption) error {
+func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, host string, r *runtime.Runtime, stop <-chan bool, opts []gosdk.ConnectionOption) error {
 	callCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -73,29 +80,32 @@ func runCommandLoop(ctx context.Context, factory *Factory, policyID, host string
 				return
 			}
 
-			factory.logger.Trace().Msg("processing remote command")
+			logger.Trace().Msg("processing remote command")
 			err := processCommand(bgCtx, r, cmd.Command)
 			if err != nil {
-				factory.logger.Error().Err(err).Msg("error processing command")
+				logger.Error().Err(err).Msg("error processing command")
 			}
-			factory.logger.Trace().Msg("successfully processed remote command")
+			logger.Trace().Msg("successfully processed remote command")
 		}
 	}()
 
-	factory.logger.Trace().Msgf("running command loop for %s", r.Config.InstanceID)
+	logger.Trace().Msg("command loop running")
 	defer func() {
-		factory.logger.Trace().Msgf("ended command loop for %s", r.Config.InstanceID)
+		f.logger.Trace().Msg("command loop ended")
 	}()
 
 	select {
 	case err = <-errCh:
-		factory.logger.Info().Err(err).Msg("error receiving command")
+		logger.Info().Err(err).Msg("error receiving command")
 		return err
 	case <-stop:
+		logger.Trace().Msg("received stop signal")
 		return nil
 	case <-stream.Context().Done():
+		logger.Trace().Msg("stream context done")
 		return stream.Context().Err()
 	case <-ctx.Done():
+		logger.Trace().Msg("context done")
 		return nil
 	}
 }

@@ -32,5 +32,5 @@ func (f *Factory) OnRuntimeStarted(ctx context.Context, tenantID, policyID, host
 		return func() {}, nil
 	}
 
-	return startController(ctx, f, tenantID, policyID, host, r)
+	return f.startController(ctx, tenantID, policyID, host, r)
 }
