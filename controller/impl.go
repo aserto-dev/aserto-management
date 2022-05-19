@@ -6,8 +6,8 @@ import (
 	"time"
 
 	gosdk "github.com/aserto-dev/aserto-go/client"
-	"github.com/aserto-dev/aserto-management/api/management/v2"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
+	"github.com/aserto-dev/go-grpc/management/v2"
 	"github.com/aserto-dev/go-lib/grpc-clients/client"
 	"github.com/aserto-dev/runtime"
 	"github.com/open-policy-agent/opa/plugins/discovery"

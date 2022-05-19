@@ -4,12 +4,11 @@ go 1.17
 
 require (
 	github.com/aserto-dev/aserto-go v0.8.3
+	github.com/aserto-dev/go-grpc v0.8.22
 	github.com/aserto-dev/mage-loot v0.8.9
 	github.com/aserto-dev/runtime v0.37.5
 	github.com/magefile/mage v1.12.1
 	github.com/open-policy-agent/opa v0.37.2
-	google.golang.org/grpc v1.45.0
-	google.golang.org/protobuf v1.28.0
 )
 
 require (
@@ -48,11 +47,12 @@ require (
 	golang.org/x/tools v0.1.7 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	google.golang.org/genproto v0.0.0-20220407144326-9054f6ed7bac // indirect
+	google.golang.org/grpc v1.45.0 // indirect
+	google.golang.org/protobuf v1.28.0 // indirect
 )
 
 require (
 	github.com/aserto-dev/clui v0.8.0 // indirect
-	github.com/aserto-dev/go-grpc v0.8.19
 	github.com/aserto-dev/go-lib v0.8.18
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
