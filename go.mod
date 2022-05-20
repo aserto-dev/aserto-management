@@ -6,46 +6,18 @@ require (
 	github.com/aserto-dev/aserto-go v0.8.3
 	github.com/aserto-dev/go-grpc v0.8.22
 	github.com/aserto-dev/mage-loot v0.8.9
-	github.com/aserto-dev/runtime v0.37.5
 	github.com/magefile/mage v1.12.1
-	github.com/open-policy-agent/opa v0.37.2
 )
 
 require (
-	github.com/OneOfOne/xxhash v1.2.8 // indirect
-	github.com/aserto-dev/go-grpc-authz v0.8.0 // indirect
 	github.com/aserto-dev/go-utils v0.8.1 // indirect
-	github.com/bytecodealliance/wasmtime-go v0.33.1 // indirect
-	github.com/ghodss/yaml v1.0.0 // indirect
-	github.com/go-ini/ini v1.66.3 // indirect
-	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/subcommands v1.0.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/google/wire v0.5.0 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.1 // indirect
-	github.com/hashicorp/errwrap v1.1.0 // indirect
-	github.com/hashicorp/go-hclog v1.2.0 // indirect
-	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/mitchellh/copystructure v1.2.0 // indirect
-	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/rcrowley/go-metrics v0.0.0-20200313005456-10cdbea86bc0 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
-	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
-	github.com/yashtewari/glob-intersection v0.0.0-20180916065949-5c77d914dd0b // indirect
-	go.opentelemetry.io/otel v1.3.0 // indirect
-	go.opentelemetry.io/otel/trace v1.3.0 // indirect
-	golang.org/x/mod v0.5.1 // indirect
 	golang.org/x/net v0.0.0-20220412020605-290c469a71a5 // indirect
-	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
-	golang.org/x/tools v0.1.7 // indirect
-	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	google.golang.org/genproto v0.0.0-20220407144326-9054f6ed7bac // indirect
 	google.golang.org/grpc v1.45.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect

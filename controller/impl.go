@@ -9,13 +9,11 @@ import (
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	"github.com/aserto-dev/go-grpc/management/v2"
 	"github.com/aserto-dev/go-lib/grpc-clients/client"
-	"github.com/aserto-dev/runtime"
-	"github.com/open-policy-agent/opa/plugins/discovery"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
-func (f *Factory) startController(ctx context.Context, tenantID, policyID, host string, r *runtime.Runtime) (func(), error) {
+func (f *Factory) startController(ctx context.Context, tenantID, policyID, host string, commandFunc CommandFunc) (func(), error) {
 	logger := f.logger.With().Fields(map[string]interface{}{
 		"tenant-id": tenantID,
 		"policy-id": policyID,
@@ -36,7 +34,7 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, host 
 
 	go func() {
 		for {
-			err = f.runCommandLoop(ctx, &logger, policyID, host, r, stop, options)
+			err = f.runCommandLoop(ctx, &logger, policyID, host, commandFunc, stop, options)
 			if err == nil || err == io.EOF {
 				return
 			}
@@ -49,7 +47,7 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, host 
 	return cleanup, nil
 }
 
-func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, host string, r *runtime.Runtime, stop <-chan bool, opts []gosdk.ConnectionOption) error {
+func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, host string, commandFunc CommandFunc, stop <-chan bool, opts []gosdk.ConnectionOption) error {
 	callCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -81,7 +79,7 @@ func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, po
 			}
 
 			logger.Trace().Msg("processing remote command")
-			err := processCommand(bgCtx, r, cmd.Command)
+			err := commandFunc(bgCtx, cmd.Command)
 			if err != nil {
 				logger.Error().Err(err).Msg("error processing command")
 			}
@@ -108,28 +106,4 @@ func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, po
 		logger.Trace().Msg("context done")
 		return nil
 	}
-}
-
-func processCommand(ctx context.Context, r *runtime.Runtime, cmd *api.Command) error {
-	switch cmd.Data.(type) {
-	case *api.Command_Discovery:
-		plugin := r.PluginsManager.Plugin(discovery.Name)
-		if plugin == nil {
-			return errors.Errorf("failed to find discovery plugin")
-		}
-
-		discoveryPlugin, ok := plugin.(*discovery.Discovery)
-		if !ok {
-			return errors.Errorf("failed to cast discovery plugin")
-		}
-
-		err := discoveryPlugin.Trigger(ctx)
-		if err != nil {
-			return errors.Wrap(err, "failed to trigger discovery")
-		}
-	default:
-		return errors.New("not implemented")
-	}
-
-	return nil
 }
