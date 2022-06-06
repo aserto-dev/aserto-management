@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 
-	"github.com/aserto-dev/go-grpc/aserto/api/v2"
+	api "github.com/aserto-dev/go-grpc/aserto/api/v2"
 	"github.com/aserto-dev/go-lib/grpc-clients/client"
 	"github.com/rs/zerolog"
 )
