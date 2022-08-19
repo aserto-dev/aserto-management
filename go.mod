@@ -2,7 +2,7 @@ module github.com/aserto-dev/aserto-management
 
 go 1.17
 
-replace github.com/aserto-dev/go-lib => ../go-lib
+// replace github.com/aserto-dev/go-lib => ../go-lib
 
 require (
 	github.com/aserto-dev/aserto-go v0.8.10
@@ -12,7 +12,7 @@ require (
 )
 
 require (
-	github.com/aserto-dev/go-utils v0.8.20 // indirect
+	github.com/aserto-dev/go-utils v0.8.23-0.20220817143547-c482df384377 // indirect
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -27,7 +27,7 @@ require (
 
 require (
 	github.com/aserto-dev/clui v0.8.1 // indirect
-	github.com/aserto-dev/go-lib v0.8.27
+	github.com/aserto-dev/go-lib v0.8.41-0.20220817143634-575ef00cb9cd
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/gitleaks/go-gitdiff v0.7.4 // indirect
