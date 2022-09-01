@@ -3,8 +3,8 @@ package controller
 import (
 	"context"
 
+	"github.com/aserto-dev/aserto-grpc/grpcclient"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v2"
-	"github.com/aserto-dev/go-lib/grpc-clients/client"
 	"github.com/rs/zerolog"
 )
 
@@ -13,10 +13,10 @@ type CommandFunc func(context.Context, *api.Command) error
 type Factory struct {
 	logger *zerolog.Logger
 	cfg    *Config
-	dop    client.DialOptionsProvider
+	dop    grpcclient.DialOptionsProvider
 }
 
-func NewFactory(logger *zerolog.Logger, cfg *Config, dop client.DialOptionsProvider) *Factory {
+func NewFactory(logger *zerolog.Logger, cfg *Config, dop grpcclient.DialOptionsProvider) *Factory {
 	if !cfg.Enabled {
 		return nil
 	}
