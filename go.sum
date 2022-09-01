@@ -165,11 +165,11 @@ github.com/aserto-dev/go-grpc v0.8.48 h1:6ygVCr3BAVaVcabutnBAR0EF36fhEQGkY4VoA90
 github.com/aserto-dev/go-grpc v0.8.48/go.mod h1:ZHKobEadfjzb39dKhc/iy8JyQDRuB/IsSwVa8YuWkQY=
 github.com/aserto-dev/go-grpc-authz v0.8.0/go.mod h1:ssdQrzxQf+IZ+jy8ATz9S6Ys+nqsTMZyKmPpdj0kwHo=
 github.com/aserto-dev/go-grpc-internal v0.8.5/go.mod h1:4NCHVoi+dfgGKED+aIsVkic8JXnTW//KzJOtLG4DO5c=
-github.com/aserto-dev/go-lib v0.8.43-0.20220831174428-00a85aa3f745 h1:zeelbU8lOx70YdxauyJwxp5G7rVt074GH0gPIVOn9Eo=
-github.com/aserto-dev/go-lib v0.8.43-0.20220831174428-00a85aa3f745/go.mod h1:4Dho1fwZyXUEvnS1ahIOJOMTswLOG9JNVnJcqOXBa9U=
+github.com/aserto-dev/go-lib v0.8.43 h1:WQ/qgRdlwHyVQ4h/jGnWGgwgO2Mz49bVV42RqDI/jTc=
+github.com/aserto-dev/go-lib v0.8.43/go.mod h1:Z1BkHVpAblQ0r+4yKEY/xt51d55PTBtSGOhzEDrRqk4=
 github.com/aserto-dev/go-utils v0.8.0/go.mod h1:BLa3UCkVmD2DgPQ5mgUD3ISjjPmSVDpTbivUky8I7Ac=
 github.com/aserto-dev/go-utils v0.8.23-0.20220825114336-7ea7d8ffdad4/go.mod h1:2nHpCxF2wuEvG2HF5XRCRgKBo/k/Fq8mxHoEZNPdEXk=
-github.com/aserto-dev/go-utils v0.8.24-0.20220831163856-9a81a03b600e/go.mod h1:2nHpCxF2wuEvG2HF5XRCRgKBo/k/Fq8mxHoEZNPdEXk=
+github.com/aserto-dev/go-utils v0.8.24/go.mod h1:2nHpCxF2wuEvG2HF5XRCRgKBo/k/Fq8mxHoEZNPdEXk=
 github.com/aserto-dev/mage-loot v0.7.0/go.mod h1:MFtnaY7g3ghhVU4okmIDQ1P6GVECib0gp6nC29NBQ2U=
 github.com/aserto-dev/mage-loot v0.8.0/go.mod h1:ncBJ4+uX3F7+oJi0bJnu3mLEIA0DyuOQ/kZDKmacgWg=
 github.com/aserto-dev/mage-loot v0.8.7/go.mod h1:16Q5Iq1e+W8J0DuCJx2LI0u7Bf7C3Z1r8ywnJZbhBGQ=
