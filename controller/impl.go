@@ -13,11 +13,12 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func (f *Factory) startController(ctx context.Context, tenantID, policyID, host string, commandFunc CommandFunc) (func(), error) {
+func (f *Factory) startController(ctx context.Context, tenantID, policyID, instanceLabel, host string, commandFunc CommandFunc) (func(), error) {
 	logger := f.logger.With().Fields(map[string]interface{}{
-		"tenant-id": tenantID,
-		"policy-id": policyID,
-		"host":      host,
+		"tenant-id":      tenantID,
+		"policy-id":      policyID,
+		"instance-label": instanceLabel,
+		"host":           host,
 	}).Logger()
 
 	options, err := client.ConfigToConnectionOptions(&f.cfg.Server, f.dop)
@@ -34,7 +35,7 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, host 
 
 	go func() {
 		for {
-			err = f.runCommandLoop(ctx, &logger, policyID, host, commandFunc, stop, options)
+			err = f.runCommandLoop(ctx, &logger, policyID, instanceLabel, host, commandFunc, stop, options)
 			if err == nil || err == io.EOF {
 				return
 			}
@@ -47,7 +48,7 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, host 
 	return cleanup, nil
 }
 
-func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, host string, commandFunc CommandFunc, stop <-chan bool, opts []gosdk.ConnectionOption) error {
+func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, instanceLabel, host string, commandFunc CommandFunc, stop <-chan bool, opts []gosdk.ConnectionOption) error {
 	callCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -59,8 +60,9 @@ func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, po
 	remoteCli := management.NewControllerClient(conn.Conn)
 	stream, err := remoteCli.CommandStream(callCtx, &management.CommandStreamRequest{
 		Info: &api.InstanceInfo{
-			PolicyId:   policyID,
-			RemoteHost: host,
+			PolicyId:    policyID,
+			PolicyLabel: instanceLabel,
+			RemoteHost:  host,
 		},
 	})
 	if err != nil {
