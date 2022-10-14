@@ -13,10 +13,11 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func (f *Factory) startController(ctx context.Context, tenantID, policyID, instanceLabel, host string, commandFunc CommandFunc) (func(), error) {
+func (f *Factory) startController(ctx context.Context, tenantID, policyID, policyName, instanceLabel, host string, commandFunc CommandFunc) (func(), error) {
 	logger := f.logger.With().Fields(map[string]interface{}{
 		"tenant-id":      tenantID,
 		"policy-id":      policyID,
+		"policy-name":    policyName,
 		"instance-label": instanceLabel,
 		"host":           host,
 	}).Logger()
@@ -35,7 +36,7 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, insta
 
 	go func() {
 		for {
-			err = f.runCommandLoop(ctx, &logger, policyID, instanceLabel, host, commandFunc, stop, options)
+			err = f.runCommandLoop(ctx, &logger, policyID, policyName, instanceLabel, host, commandFunc, stop, options)
 			if err == nil || err == io.EOF {
 				return
 			}
@@ -48,7 +49,7 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, insta
 	return cleanup, nil
 }
 
-func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, instanceLabel, host string, commandFunc CommandFunc, stop <-chan bool, opts []gosdk.ConnectionOption) error {
+func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, policyName, instanceLabel, host string, commandFunc CommandFunc, stop <-chan bool, opts []gosdk.ConnectionOption) error {
 	callCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -61,6 +62,7 @@ func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, po
 	stream, err := remoteCli.CommandStream(callCtx, &management.CommandStreamRequest{
 		Info: &api.InstanceInfo{
 			PolicyId:    policyID,
+			PolicyName:  policyName,
 			PolicyLabel: instanceLabel,
 			RemoteHost:  host,
 		},

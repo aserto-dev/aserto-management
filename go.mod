@@ -7,7 +7,7 @@ go 1.17
 require (
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/aserto-grpc v0.0.3
-	github.com/aserto-dev/go-grpc v0.8.48
+	github.com/aserto-dev/go-grpc v0.8.54
 	github.com/aserto-dev/go-lib v0.8.45
 	github.com/aserto-dev/mage-loot v0.8.9
 	github.com/magefile/mage v1.13.0
