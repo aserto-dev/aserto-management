@@ -29,10 +29,10 @@ func NewFactory(logger *zerolog.Logger, cfg *Config, dop grpcclient.DialOptionsP
 	}
 }
 
-func (f *Factory) OnRuntimeStarted(ctx context.Context, tenantID, policyID, instanceLabel, host string, commandFunc CommandFunc) (func(), error) {
+func (f *Factory) OnRuntimeStarted(ctx context.Context, tenantID, policyID, policyName, instanceLabel, host string, commandFunc CommandFunc) (func(), error) {
 	if f == nil {
 		return func() {}, nil
 	}
 
-	return f.startController(ctx, tenantID, policyID, instanceLabel, host, commandFunc)
+	return f.startController(ctx, tenantID, policyID, policyName, instanceLabel, host, commandFunc)
 }
