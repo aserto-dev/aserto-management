@@ -8,7 +8,6 @@ import (
 	gosdk "github.com/aserto-dev/aserto-go/client"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v2"
 	management "github.com/aserto-dev/go-grpc/aserto/management/v2"
-	"github.com/aserto-dev/go-lib/grpc-clients/client"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
@@ -22,7 +21,7 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, polic
 		"host":           host,
 	}).Logger()
 
-	options, err := client.ConfigToConnectionOptions(&f.cfg.Server, f.dop)
+	options, err := f.cfg.Server.ToClientOptions(f.dop)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup grpc dial options for the remote service")
 	}

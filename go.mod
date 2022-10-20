@@ -4,13 +4,14 @@ go 1.17
 
 // replace github.com/aserto-dev/go-lib => ../go-lib
 
+// replace github.com/aserto-dev/aserto-grpc => ../aserto-grpc
+
 require (
-	github.com/aserto-dev/aserto-go v0.8.11
-	github.com/aserto-dev/aserto-grpc v0.0.3
+	github.com/aserto-dev/aserto-go v0.8.14-0.20221018123009-a56db85a7ed3
+	github.com/aserto-dev/aserto-grpc v0.1.0
 	github.com/aserto-dev/go-grpc v0.8.54
-	github.com/aserto-dev/go-lib v0.8.45
 	github.com/aserto-dev/mage-loot v0.8.9
-	github.com/magefile/mage v1.13.0
+	github.com/magefile/mage v1.14.0
 )
 
 require (
@@ -48,12 +49,12 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/zricethezav/gitleaks/v8 v8.3.0 // indirect
-	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e // indirect
+	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
 	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde // indirect
-	golang.org/x/sys v0.0.0-20220624220833-87e55d714810 // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/genproto v0.0.0-20220902135211-223410557253 // indirect
+	google.golang.org/genproto v0.0.0-20220927151529-dcaddaf36704 // indirect
 	google.golang.org/grpc v1.49.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
