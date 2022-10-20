@@ -2,13 +2,13 @@ module github.com/aserto-dev/aserto-management
 
 go 1.17
 
-replace github.com/aserto-dev/go-lib => ../go-lib
+// replace github.com/aserto-dev/go-lib => ../go-lib
 
-replace github.com/aserto-dev/aserto-grpc => ../aserto-grpc
+// replace github.com/aserto-dev/aserto-grpc => ../aserto-grpc
 
 require (
 	github.com/aserto-dev/aserto-go v0.8.14-0.20221018123009-a56db85a7ed3
-	github.com/aserto-dev/aserto-grpc v0.0.4
+	github.com/aserto-dev/aserto-grpc v0.1.0
 	github.com/aserto-dev/go-grpc v0.8.54
 	github.com/aserto-dev/mage-loot v0.8.9
 	github.com/magefile/mage v1.14.0
