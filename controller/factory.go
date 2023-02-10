@@ -17,7 +17,7 @@ type Factory struct {
 }
 
 func NewFactory(logger *zerolog.Logger, cfg *Config, dop grpcclient.DialOptionsProvider) *Factory {
-	if !cfg.Enabled {
+	if cfg == nil || !cfg.Enabled {
 		return nil
 	}
 
