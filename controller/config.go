@@ -1,8 +1,10 @@
 package controller
 
-import "github.com/aserto-dev/aserto-grpc/grpcclient"
+import (
+	"github.com/aserto-dev/go-aserto/client"
+)
 
 type Config struct {
-	Enabled bool              `json:"enabled"`
-	Server  grpcclient.Config `json:"server"`
+	Enabled bool           `json:"enabled"`
+	Server  *client.Config `json:"server"`
 }

@@ -5,7 +5,7 @@ import (
 	"io"
 	"time"
 
-	gosdk "github.com/aserto-dev/aserto-go/client"
+	"github.com/aserto-dev/go-aserto/client"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v2"
 	management "github.com/aserto-dev/go-grpc/aserto/management/v2"
 	"github.com/pkg/errors"
@@ -21,12 +21,12 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, polic
 		"host":           host,
 	}).Logger()
 
-	options, err := f.cfg.Server.ToClientOptions(f.dop)
+	options, err := f.cfg.Server.ToConnectionOptions(f.dop)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup grpc dial options for the remote service")
 	}
 
-	options = append(options, gosdk.WithTenantID(tenantID))
+	options = append(options, client.WithTenantID(tenantID))
 
 	stop := make(chan bool)
 	cleanup := func() {
@@ -48,11 +48,11 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, polic
 	return cleanup, nil
 }
 
-func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, policyName, instanceLabel, host string, commandFunc CommandFunc, stop <-chan bool, opts []gosdk.ConnectionOption) error {
+func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, policyName, instanceLabel, host string, commandFunc CommandFunc, stop <-chan bool, opts []client.ConnectionOption) error {
 	callCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	conn, err := gosdk.NewConnection(callCtx, opts...)
+	conn, err := client.NewConnection(callCtx, opts...)
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to the control plane")
 	}
