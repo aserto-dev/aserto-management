@@ -61,7 +61,3 @@ jobs:
       - name: Test
         run: |
           go run mage.go test
-      - name: Upload code coverage
-        uses: shogo82148/actions-goveralls@v1
-        with:
-          path-to-profile: cover.out
