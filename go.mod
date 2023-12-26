@@ -3,7 +3,7 @@ module github.com/aserto-dev/aserto-management
 go 1.20
 
 require (
-	github.com/aserto-dev/go-aserto v0.20.3
+	github.com/aserto-dev/go-aserto v0.30.1-0.20231219000937-ccf962bba0e2
 	github.com/aserto-dev/go-grpc v0.8.60-0.20231226173955-aa742a8cad67
 	github.com/magefile/mage v1.15.0
 	github.com/pkg/errors v0.9.1
@@ -11,7 +11,10 @@ require (
 )
 
 require (
+	github.com/aserto-dev/header v0.0.4 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/google/uuid v1.3.1 // indirect
+	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect

@@ -57,7 +57,7 @@ func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, po
 		return errors.Wrap(err, "failed to connect to the control plane")
 	}
 
-	remoteCli := management.NewControllerClient(conn.Conn)
+	remoteCli := management.NewControllerClient(conn)
 	stream, err := remoteCli.CommandStream(callCtx, &management.CommandStreamRequest{
 		Info: &api.InstanceInfo{
 			PolicyId:    policyID,
