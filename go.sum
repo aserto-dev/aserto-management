@@ -4,8 +4,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/aserto-dev/go-aserto v0.31.0 h1:JL7KWw8Odc/AdFJOUNtzn7ELMhxZsojan12RscIMags=
 github.com/aserto-dev/go-aserto v0.31.0/go.mod h1:qCMQT7uPSAu94AAVyB+Bsn9PO/97L1li30p632fW/Ec=
-github.com/aserto-dev/go-grpc v0.8.60-0.20240108212755-3accbcf8e714 h1:7mhUqADSU1rkEeXGNG3ja889+whbVwcr7at78Ar64rA=
-github.com/aserto-dev/go-grpc v0.8.60-0.20240108212755-3accbcf8e714/go.mod h1:ZAlsa2ooMcXuEWhUvAsrANm6lpMHFKJsIEhvpqydn+Y=
+github.com/aserto-dev/go-grpc v0.8.60 h1:0keqgCNqa2l4o/1+CHYMeG0qP+xT507cYFCEsGPAr/M=
+github.com/aserto-dev/go-grpc v0.8.60/go.mod h1:ZAlsa2ooMcXuEWhUvAsrANm6lpMHFKJsIEhvpqydn+Y=
 github.com/aserto-dev/header v0.0.6 h1:uSSo/KAqqypSbgHefmEGdkDgHqteu9n38Z5gHANOaWI=
 github.com/aserto-dev/header v0.0.6/go.mod h1:jUHV4BK6nc/kqHZoN7jNn9jvjGyaISsjIzU/2OSe/Mg=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=

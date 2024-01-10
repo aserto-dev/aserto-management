@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/aserto-dev/go-aserto v0.31.0
-	github.com/aserto-dev/go-grpc v0.8.60-0.20240108212755-3accbcf8e714
+	github.com/aserto-dev/go-grpc v0.8.60
 	github.com/magefile/mage v1.15.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.31.0
