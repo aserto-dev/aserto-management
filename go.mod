@@ -4,9 +4,9 @@ go 1.21
 
 require (
 	github.com/aserto-dev/go-aserto v0.31.6-0.20240807172205-64afa2b20a7f
-	github.com/aserto-dev/go-grpc v0.8.64
+	github.com/aserto-dev/go-grpc v0.8.67
 	github.com/pkg/errors v0.9.1
-	github.com/rs/zerolog v1.32.0
+	github.com/rs/zerolog v1.33.0
 )
 
 require (
