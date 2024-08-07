@@ -16,35 +16,36 @@ on:
 env:
   VAULT_ADDR: https://vault.eng.aserto.com/
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'development' || '' }}
-  GO_VERSION: "1.20"
+  GO_VERSION: "1.22"
+  GO_RELEASER_VERSION: "v1.24.0"
+  GO_LANGCI_LINT_VERSION: "v1.56.2"
+  GO_TESTSUM_VERSION: "1.11.0"
+  GOPRIVATE: github.com/aserto-dev
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Read Configuration
-        uses: hashicorp/vault-action@v2.5.0
+      - 
+        name: Read Configuration
+        uses: hashicorp/vault-action@v3
         id: vault
         with:
           url: ${{ env.VAULT_ADDR }}
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/github  "SSH_PRIVATE_KEY"     | SSH_PRIVATE_KEY;      
-      - uses: actions/checkout@v3
+      - 
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup Go
-        uses: actions/setup-go@v4
+      - 
+        name: Setup Go
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
-      - name: Setup caching
-        uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-      - name: Install Tools
+      -
+        name: Docker SSH Setup
         run: |
           mkdir -p $HOME/.ssh
           umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
@@ -54,10 +55,18 @@ jobs:
           git config --global user.name "Aserto Bot"
           eval `ssh-agent`
           ssh-add $HOME/.ssh/id_rsa
-          go run mage.go deps 
-      - name: Lint
+      -
+        name: Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: ${{ env.GO_LANGCI_LINT_VERSION }}
+          args: --timeout=30m
+      -
+        name: Test Setup
+        uses: gertd/action-gotestsum@v3.0.0
+        with:
+          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
+      -
+        name: Test
         run: |
-          go run mage.go lint
-      - name: Test
-        run: |
-          go run mage.go test
+          gotestsum --format short-verbose -- -count=1 -v github.com/aserto-dev/aserto-management/... -timeout=240s ./...

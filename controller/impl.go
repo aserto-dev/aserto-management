@@ -5,7 +5,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/aserto-dev/go-aserto/client"
+	client "github.com/aserto-dev/go-aserto"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v2"
 	management "github.com/aserto-dev/go-grpc/aserto/management/v2"
 	"github.com/pkg/errors"
@@ -52,7 +52,7 @@ func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, po
 	callCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	conn, err := client.NewConnection(callCtx, opts...)
+	conn, err := client.NewConnection(opts...)
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to the control plane")
 	}

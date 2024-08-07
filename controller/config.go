@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/aserto-dev/go-aserto/client"
+	client "github.com/aserto-dev/go-aserto"
 )
 
 type Config struct {
