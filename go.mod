@@ -3,7 +3,7 @@ module github.com/aserto-dev/aserto-management
 go 1.21
 
 require (
-	github.com/aserto-dev/go-aserto v0.31.6-0.20240808135743-1397b90e425d
+	github.com/aserto-dev/go-aserto v0.31.6-0.20240808230126-d4cf89f6c1b5
 	github.com/aserto-dev/go-grpc v0.8.67
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.33.0
