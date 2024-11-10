@@ -21,12 +21,12 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, polic
 		"host":           host,
 	}).Logger()
 
-	options, err := f.cfg.Server.ToConnectionOptions(f.dop)
+	options, err := f.cfg.Server.ToConnectionOptions()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to setup grpc dial options for the remote service")
 	}
 
-	options = append(options, client.WithTenantID(tenantID))
+	options = append(options, client.WithTenantID(tenantID), client.WithDialOptions(f.dop))
 
 	stop := make(chan bool)
 	cleanup := func() {

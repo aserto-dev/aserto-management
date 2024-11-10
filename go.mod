@@ -1,9 +1,11 @@
 module github.com/aserto-dev/aserto-management
 
-go 1.21
+go 1.22
+
+toolchain go1.23.3
 
 require (
-	github.com/aserto-dev/go-aserto v0.32.0
+	github.com/aserto-dev/go-aserto v0.32.2-0.20241109000800-412633e004e2
 	github.com/aserto-dev/go-grpc v0.8.68
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.33.0
@@ -14,8 +16,11 @@ require (
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.21.0 // indirect
+	github.com/hashicorp/errwrap v1.0.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/samber/lo v1.46.0 // indirect
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/sys v0.24.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
