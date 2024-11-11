@@ -13,10 +13,10 @@ type CommandFunc func(context.Context, *api.Command) error
 type Factory struct {
 	logger *zerolog.Logger
 	cfg    *Config
-	dop    grpc.DialOption
+	dopts  []grpc.DialOption
 }
 
-func NewFactory(logger *zerolog.Logger, cfg *Config, dop grpc.DialOption) *Factory {
+func NewFactory(logger *zerolog.Logger, cfg *Config, dopts []grpc.DialOption) *Factory {
 	if cfg == nil || !cfg.Enabled {
 		return nil
 	}
@@ -25,7 +25,7 @@ func NewFactory(logger *zerolog.Logger, cfg *Config, dop grpc.DialOption) *Facto
 	return &Factory{
 		logger: &newLogger,
 		cfg:    cfg,
-		dop:    dop,
+		dopts:  dopts,
 	}
 }
 
