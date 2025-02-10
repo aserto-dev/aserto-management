@@ -12,6 +12,8 @@ import (
 	"github.com/rs/zerolog"
 )
 
+const maxRetries = 10
+
 func (f *Factory) startController(ctx context.Context, tenantID, policyID, policyName, instanceLabel, host string, commandFunc CommandFunc) (func(), error) {
 	logger := f.logger.With().Fields(map[string]interface{}{
 		"tenant-id":      tenantID,
@@ -32,9 +34,14 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, polic
 	cleanup := func() {
 		stop <- true
 	}
-
+	i := 0
 	go func() {
 		for {
+			if i > maxRetries {
+				logger.Info().Msg("command loop reached maximum command loop retries, stopping")
+				stop <- true
+				return
+			}
 			err = f.runCommandLoop(ctx, &logger, policyID, policyName, instanceLabel, host, commandFunc, stop, options)
 			if err == nil || err == io.EOF {
 				return
@@ -42,6 +49,7 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, polic
 
 			logger.Info().Err(err).Msg("command loop exited with error, restarting")
 			time.Sleep(5 * time.Second)
+			i++
 		}
 	}()
 
