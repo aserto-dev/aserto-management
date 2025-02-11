@@ -2,7 +2,7 @@ package controller
 
 import (
 	"context"
-	"io"
+	"math"
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
@@ -10,9 +10,17 @@ import (
 	management "github.com/aserto-dev/go-grpc/aserto/management/v2"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"golang.org/x/sync/errgroup"
 )
 
-const maxRetries = 10
+type SleepResult bool
+
+const (
+	timeout                     = 1 * time.Second
+	maxBackoff                  = 600 * time.Second // max waits between retries.
+	Canceled        SleepResult = true
+	DurationReached SleepResult = false
+)
 
 func (f *Factory) startController(ctx context.Context, tenantID, policyID, policyName, instanceLabel, host string, commandFunc CommandFunc) (func(), error) {
 	logger := f.logger.With().Fields(map[string]interface{}{
@@ -23,50 +31,43 @@ func (f *Factory) startController(ctx context.Context, tenantID, policyID, polic
 		"host":           host,
 	}).Logger()
 
-	options, err := f.cfg.Server.ToConnectionOptions()
+	errGroup := errgroup.Group{}
+
+	conn, err := f.cfg.Server.Connect(client.WithTenantID(tenantID), client.WithDialOptions(f.dopts...))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to setup grpc dial options for the remote service")
-	}
-
-	options = append(options, client.WithTenantID(tenantID), client.WithDialOptions(f.dopts...))
-
-	stop := make(chan bool)
-	cleanup := func() {
-		stop <- true
-	}
-	i := 0
-	go func() {
-		for {
-			if i > maxRetries {
-				logger.Info().Msg("command loop reached maximum command loop retries, stopping")
-				stop <- true
-				return
-			}
-			err = f.runCommandLoop(ctx, &logger, policyID, policyName, instanceLabel, host, commandFunc, stop, options)
-			if err == nil || err == io.EOF {
-				return
-			}
-
-			logger.Info().Err(err).Msg("command loop exited with error, restarting")
-			time.Sleep(5 * time.Second)
-			i++
-		}
-	}()
-
-	return cleanup, nil
-}
-
-func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, policyName, instanceLabel, host string, commandFunc CommandFunc, stop <-chan bool, opts []client.ConnectionOption) error {
-	callCtx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
-	conn, err := client.NewConnection(opts...)
-	if err != nil {
-		return errors.Wrap(err, "failed to connect to the control plane")
+		return func() {}, errors.Wrap(err, "failed to initialize new connection")
 	}
 
 	remoteCli := management.NewControllerClient(conn)
-	stream, err := remoteCli.CommandStream(callCtx, &management.CommandStreamRequest{
+	ctx, cancel := context.WithCancel(ctx)
+
+	errGroup.Go(func() error {
+		for retry := 0; ; retry++ {
+			retry++
+			err = f.runCommandLoop(ctx, &logger, policyID, policyName, instanceLabel, host, commandFunc, remoteCli)
+			if err == nil { // graceful shutdown on context canceled.
+				return nil
+			}
+			logger.Info().Err(err).Msg("command loop exited with error, restarting")
+			backoff := timeout * time.Duration(math.Pow(2, float64(retry)))
+			if sleepWithContext(ctx, min(backoff, maxBackoff)) == Canceled {
+				break
+			}
+		}
+
+		return nil
+	})
+
+	return func() {
+		cancel()
+		if err = errGroup.Wait(); err != nil {
+			logger.Error().Err(err).Msg("error cleanup")
+		}
+	}, nil
+}
+
+func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, policyID, policyName, instanceLabel, host string, commandFunc CommandFunc, remoteCli management.ControllerClient) error {
+	stream, err := remoteCli.CommandStream(ctx, &management.CommandStreamRequest{
 		Info: &api.InstanceInfo{
 			PolicyId:    policyID,
 			PolicyName:  policyName,
@@ -81,7 +82,6 @@ func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, po
 	errCh := make(chan error)
 
 	go func() {
-		bgCtx := context.Background()
 		for {
 			cmd, errRcv := stream.Recv()
 			if errRcv != nil {
@@ -90,7 +90,7 @@ func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, po
 			}
 
 			logger.Trace().Msg("processing remote command")
-			err := commandFunc(bgCtx, cmd.Command)
+			err := commandFunc(ctx, cmd.Command)
 			if err != nil {
 				logger.Error().Err(err).Msg("error processing command")
 			}
@@ -107,14 +107,20 @@ func (f *Factory) runCommandLoop(ctx context.Context, logger *zerolog.Logger, po
 	case err = <-errCh:
 		logger.Info().Err(err).Msg("error receiving command")
 		return err
-	case <-stop:
-		logger.Trace().Msg("received stop signal")
-		return nil
 	case <-stream.Context().Done():
 		logger.Trace().Msg("stream context done")
 		return stream.Context().Err()
 	case <-ctx.Done():
 		logger.Trace().Msg("context done")
 		return nil
+	}
+}
+
+func sleepWithContext(ctx context.Context, duration time.Duration) SleepResult {
+	select {
+	case <-ctx.Done():
+		return Canceled
+	case <-time.After(duration):
+		return DurationReached
 	}
 }

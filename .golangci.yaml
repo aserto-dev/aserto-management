@@ -122,6 +122,8 @@ issues:
     - path: _test\.go
       linters:
         - gomnd
+        - err113
+        - testpackage
     # https://github.com/go-critic/go-critic/issues/926
     - text: "unnecessaryDefer:"
       linters:
